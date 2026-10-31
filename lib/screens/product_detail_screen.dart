@@ -15,13 +15,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int _currentImageIndex = 0;
   final PageController _pageController = PageController();
 
-  // Variasi warna pastel smartphone
+  // Variasi warna bertema Sea Color Combinations
   final List<Map<String, dynamic>> _pastelColorVariants = [
-    {'name': 'Pastel Lilac', 'color': const Color(0xFFCDB4DB)},
-    {'name': 'Blush Pink', 'color': const Color(0xFFFFC8DD)},
-    {'name': 'Mint Sage', 'color': const Color(0xFFB9FBC0)},
-    {'name': 'Pastel Sky', 'color': const Color(0xFFA0C4FF)},
-    {'name': 'Phantom Dark', 'color': const Color(0xFF3D405B)},
+    {'name': 'Ocean Teal', 'color': const Color(0xFF166A86)},
+    {'name': 'Seafoam Aqua', 'color': const Color(0xFF63CBC4)},
+    {'name': 'Deep Navy', 'color': const Color(0xFF053549)},
+    {'name': 'Sky Breeze', 'color': const Color(0xFF8FC8E3)},
+    {'name': 'Golden Sand', 'color': const Color(0xFFFEC23E)},
   ];
   int _selectedColorIndex = 0;
 
@@ -772,7 +772,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Pilihan Warna Pastel',
+                                  'Pilihan Warna Eksklusif',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w800,

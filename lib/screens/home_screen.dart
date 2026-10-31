@@ -216,19 +216,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Row(
                                     children: [
                                       const Text(
-                                        'Pastel',
+                                        'Nsh',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w800,
                                           color: PastelColors.primary,
+                                          letterSpacing: -0.5,
                                         ),
                                       ),
                                       Text(
-                                        'Phone',
+                                        'Store',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w800,
                                           color: PastelColors.secondary,
+                                          letterSpacing: -0.5,
                                         ),
                                       ),
                                     ],
@@ -456,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 14),
                         Text(
-                          'Memuat smartphone pastel...',
+                          'Memuat produk NshStore...',
                           style: TextStyle(
                             fontSize: 13,
                             color: PastelColors.textMedium,

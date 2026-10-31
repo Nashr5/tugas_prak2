@@ -12,9 +12,9 @@ class PastelPromoBanner extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
-            Color(0xFFE8DEF8), // Pastel Lilac
-            Color(0xFFFFD8E4), // Pastel Rose
-            Color(0xFFFFE3D8), // Pastel Peach
+            Color(0xFFD6FFF7), // Sea Foam Mint (dari palet laut)
+            Color(0xFFBAE6FD), // Sky Lagoon Blue
+            Color(0xFFE0F2FE), // Ocean Mist
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -67,7 +67,7 @@ class PastelPromoBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Koleksi Handphone Terbaru 📱',
+                  'Koleksi Smartphone NshStore 📱',
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,

@@ -1,7 +1,7 @@
-# PastelPhone - Aplikasi Penjualan Handphone 📱🌸
+# NshStore - Aplikasi Penjualan Handphone 📱🌊
 > **Tugas Praktikum 2 - Pemrograman Perangkat Bergerak (PPB)**
 
-Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi REST API dari [DummyJSON Products API](https://dummyjson.com/docs/products) dengan desain antarmuka modern bertema **Pastel Color Palette** yang lembut dan estetik.
+Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi REST API dari [DummyJSON Products API](https://dummyjson.com/docs/products) dengan desain antarmuka modern bertema **Sea Color Combinations** yang segar, elegan, dan estetik.
 
 ---
 
@@ -18,8 +18,8 @@ Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi 
 ## ✨ Fitur-Fitur Aplikasi
 
 ### 1. Halaman Depan (Katalog Handphone)
-- **Desain Skema Warna Pastel**: Menggunakan kombinasi warna pastel lembut (Lavender Mist `#7E69AB`, Soft Coral `#FF9AA2`, Mint Sage `#83C5BE`, Sky Blue `#90C2E7`, dan Butter Yellow `#FFDF9E`).
-- **Banner Promo Interaktif**: Menampilkan penawaran spesial gadget dengan sentuhan gradient warna pastel.
+- **Desain Skema Warna Sea Color Combinations**: Menggunakan kombinasi warna laut dan samudra yang harmonis (Deep Ocean Teal `#166A86`, Deep Navy `#053549`, Seafoam Aqua `#63CBC4`, Vibrant Sea Blue `#2E88BC`, Sky Breeze `#8FC8E3`, dan Golden Sand `#FEC23E`).
+- **Banner Promo Interaktif**: Menampilkan penawaran spesial gadget dengan sentuhan gradient warna laut yang estetik.
 - **Filter Kategori Cepat**: Filter produk berdasarkan brand (Semua, Apple, Samsung, Vivo, Oppo, Realme, Diskon Spesial, dan Top Rated).
 - **Toggle Tampilan**: Pilihan tampilan **Grid (2 kolom)** atau **List (1 kolom)** sesuai kenyamanan pengguna.
 - **Card Produk Modern**: Menampilkan foto produk, badge brand, diskon persentase, rating bintang, harga coret, serta harga terkini.
@@ -37,7 +37,7 @@ Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi 
   - Judul handphone, badge brand resmi, dan status ketersediaan stok (`In Stock`).
   - Rating bintang serta jumlah ulasan pelanggan.
   - Komparasi harga ritel, harga diskon, dan nominal penghematan.
-- **Pilihan Varian Warna Pastel**: Interaktif memilih warna smartphone (Pastel Lilac, Blush Pink, Mint Sage, Pastel Sky, Phantom Dark).
+- **Pilihan Varian Warna Eksklusif**: Interaktif memilih varian warna smartphone (Ocean Teal, Seafoam Aqua, Deep Navy, Sky Breeze, Golden Sand).
 - **Pilihan Kapasitas Memori (ROM)**: Pilihan memori 128 GB, 256 GB, 512 GB, dan 1 TB.
 - **Spesifikasi Detail Handphone**: Menampilkan informasi brand resmi, garansi, estimasi pengiriman, kebijakan pengembalian produk, dimensi, bobot, dan minimum order.
 - **Ulasan Pelanggan (Reviews)**: Menampilkan rating bintang, nama reviewer, tanggal, dan testimoni ulasan asli dari API DummyJSON.
@@ -45,15 +45,17 @@ Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi 
 
 ---
 
-## 🎨 Referensi Skema Warna Pastel
+## 🎨 Referensi Skema Warna (Sea Color Combinations)
 
-Warna-warna yang diterapkan merujuk pada prinsip keselarasan pastel color palette:
-- **Primary / Lavender**: `#7E69AB` / Light `#F0ECF8`
-- **Secondary / Soft Pink**: `#FF9AA2` / Light `#FFF0F2`
-- **Mint Sage**: `#83C5BE` / Light `#EBF7F5`
-- **Peach**: `#FFB7A1` / Light `#FFF4F0`
-- **Sky Blue**: `#90C2E7` / Light `#EEF6FC`
-- **Background**: `#F7F8FD`
+Warna-warna yang diterapkan merujuk pada palet tema Sea Color Combinations:
+- **Primary / Ocean Teal**: `#166A86` / Light `#E2F6F7`
+- **Secondary / Wave Blue**: `#2E88BC` / Light `#E8F4FA`
+- **Deepest Navy (Text / Accents)**: `#053549`
+- **Seafoam Aqua / Mint**: `#63CBC4` / Light `#D6FFF7`
+- **Beach Sand**: `#E4C3A2` / Light `#FAF3EC`
+- **Sky Breeze**: `#8FC8E3` / Light `#EFF7FC`
+- **Golden Sun / Amber**: `#FEC23E`
+- **Background**: `#F4F9FA` (Fresh Coastal Breeze)
 - **Surface**: `#FFFFFF`
 
 ---

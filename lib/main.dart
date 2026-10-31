@@ -5,16 +5,16 @@ import 'theme/pastel_colors.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const PastelGadgetApp());
+  runApp(const NshStoreApp());
 }
 
-class PastelGadgetApp extends StatelessWidget {
-  const PastelGadgetApp({super.key});
+class NshStoreApp extends StatelessWidget {
+  const NshStoreApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pastel Phone Store',
+      title: 'NshStore',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -38,3 +38,6 @@ class PastelGadgetApp extends StatelessWidget {
     );
   }
 }
+
+// Alias kompatibilitas
+typedef PastelGadgetApp = NshStoreApp;
