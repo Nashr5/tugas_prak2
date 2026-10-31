@@ -190,22 +190,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 44,
                                 height: 44,
                                 decoration: BoxDecoration(
-                                  gradient: PastelColors.primaryGradient,
                                   borderRadius: BorderRadius.circular(14),
                                   boxShadow: [
                                     BoxShadow(
                                       color:
-                                          PastelColors.primary.withValues(alpha: 0.3),
+                                          PastelColors.primary.withValues(alpha: 0.25),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
                                     ),
                                   ],
                                 ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.smartphone_rounded,
-                                    color: Colors.white,
-                                    size: 24,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: Image.asset(
+                                    'assets/images/app_icon.png',
+                                    width: 44,
+                                    height: 44,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),

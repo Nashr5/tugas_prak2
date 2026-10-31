@@ -107,25 +107,31 @@ class PastelPromoBanner extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          // Ikon / Ilustrasi Handphone Pastel
+          // Logo / Ikon Brand NshStore
           Container(
             width: 76,
             height: 76,
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: Colors.white.withValues(alpha: 0.9),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 10,
+                  color: PastelColors.primary.withValues(alpha: 0.12),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: const Center(
-              child: Icon(
-                Icons.smartphone_rounded,
-                size: 44,
-                color: PastelColors.primary,
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  'assets/images/app_icon.png',
+                  width: 54,
+                  height: 54,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
