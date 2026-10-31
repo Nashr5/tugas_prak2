@@ -10,7 +10,7 @@ Aplikasi katalog dan penjualan smartphone berbasis **Flutter** yang mengonsumsi 
 - **Nama**: Mohammad Nashrudin Mahardhika
 - **NIM**: 240102058
 - **Kelas / Mata Kuliah**: Pemrograman Perangkat Bergerak (PPB)
-- **Link Video YouTube**: ``
+- **Link Video YouTube**: `https://youtu.be/jVbfj0OljNI`
 
 ---
 
