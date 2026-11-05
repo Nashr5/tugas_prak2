@@ -7,6 +7,7 @@ import '../widgets/category_chips.dart';
 import '../widgets/product_card.dart';
 import '../widgets/search_bar_widget.dart';
 import 'product_detail_screen.dart';
+import 'product_form_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -159,10 +160,186 @@ class _HomeScreenState extends State<HomeScreen> {
     _displayedProducts = filtered;
   }
 
+  // ===== CRUD ACTIONS =====
+
+  /// Navigasi ke halaman Tambah Produk Baru (CREATE)
+  Future<void> _navigateToAddProduct() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProductFormScreen(),
+      ),
+    );
+
+    // Jika berhasil menambah produk, reload data
+    if (result == true) {
+      _loadProducts();
+    }
+  }
+
+  /// Navigasi ke halaman Edit Produk (UPDATE)
+  Future<void> _navigateToEditProduct(Product product) async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductFormScreen(product: product),
+      ),
+    );
+
+    // Jika berhasil edit produk, reload data
+    if (result == true) {
+      _loadProducts();
+    }
+  }
+
+  /// Menghapus produk dengan konfirmasi dialog (DELETE)
+  Future<void> _deleteProduct(Product product) async {
+    // Tampilkan dialog konfirmasi
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        backgroundColor: PastelColors.surface,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: const BoxDecoration(
+                color: PastelColors.secondaryLight,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.delete_forever_rounded,
+                size: 48,
+                color: PastelColors.secondary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Hapus Produk?',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: PastelColors.textDark,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Apakah Anda yakin ingin menghapus "${product.title}"? Tindakan ini tidak dapat dibatalkan.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13,
+                color: PastelColors.textMedium,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: PastelColors.textDark,
+                      side: const BorderSide(color: PastelColors.border),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Batal'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade400,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Hapus'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (confirm != true) return;
+
+    try {
+      await _apiService.deleteProduct(product.id);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: PastelColors.mint,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle_rounded,
+                  color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Produk "${product.title}" berhasil dihapus!',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      _loadProducts();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red.shade400,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          content: Text('Gagal menghapus: $e'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PastelColors.background,
+
+      // ===== FAB: Tombol Tambah Produk Baru =====
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _navigateToAddProduct,
+        backgroundColor: PastelColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 6,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        icon: const Icon(Icons.add_rounded, size: 22),
+        label: const Text(
+          'Tambah Produk',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        ),
+      ),
+
       body: SafeArea(
         child: RefreshIndicator(
           color: PastelColors.primary,
@@ -597,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               else if (_isGridView)
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 80),
                   sliver: SliverGrid(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -609,7 +786,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final product = _displayedProducts[index];
-                        return ProductCard(product: product);
+                        return ProductCard(
+                          product: product,
+                          onEdit: () => _navigateToEditProduct(product),
+                          onDelete: () => _deleteProduct(product),
+                          onProductUpdated: _loadProducts,
+                        );
                       },
                       childCount: _displayedProducts.length,
                     ),
@@ -617,7 +799,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 80),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -636,159 +818,229 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListItem(BuildContext context, Product product) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: product),
-          ),
-        );
-      },
-      child: Container(
+    return Dismissible(
+      key: ValueKey(product.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: PastelColors.surface,
+          color: Colors.red.shade400,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: PastelColors.border),
-          boxShadow: [
-            BoxShadow(
-              color: PastelColors.primary.withValues(alpha: 0.04),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+        ),
+        alignment: Alignment.centerRight,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_rounded, color: Colors.white, size: 28),
+            SizedBox(height: 4),
+            Text(
+              'Hapus',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            // Thumbnail
-            Container(
-              width: 90,
-              height: 90,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: PastelColors.primaryLight.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Image.network(
-                product.thumbnail,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.phone_android_rounded,
-                  color: PastelColors.primarySoft,
-                ),
+      ),
+      confirmDismiss: (direction) async {
+        _deleteProduct(product);
+        return false; // Kita handle sendiri di _deleteProduct
+      },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(
+                product: product,
+                onProductUpdated: _loadProducts,
               ),
             ),
-            const SizedBox(width: 14),
-            // Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: PastelColors.primaryLight,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          product.brandDisplay,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: PastelColors.primaryDark,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.star_rounded,
-                        size: 15,
-                        color: PastelColors.star,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        product.rating.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: PastelColors.textDark,
-                        ),
-                      ),
-                    ],
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: PastelColors.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: PastelColors.border),
+            boxShadow: [
+              BoxShadow(
+                color: PastelColors.primary.withValues(alpha: 0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Thumbnail
+              Container(
+                width: 90,
+                height: 90,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: PastelColors.primaryLight.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Image.network(
+                  product.thumbnail,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.phone_android_rounded,
+                    color: PastelColors.primarySoft,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    product.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: PastelColors.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Stok: ${product.stock} unit',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: PastelColors.textMedium,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Text(
-                        product.formattedPrice,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          color: PastelColors.primary,
-                        ),
-                      ),
-                      if (product.discountPercentage > 0) ...[
-                        const SizedBox(width: 6),
-                        Text(
-                          product.formattedOriginalPrice,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            decoration: TextDecoration.lineThrough,
-                            color: PastelColors.textLight,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
+                ),
+              ),
+              const SizedBox(width: 14),
+              // Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
+                            horizontal: 8,
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: PastelColors.secondary,
-                            borderRadius: BorderRadius.circular(6),
+                            color: PastelColors.primaryLight,
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            '-${product.discountPercentage.toStringAsFixed(0)}%',
+                            product.brandDisplay,
                             style: const TextStyle(
-                              fontSize: 9,
+                              fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              color: PastelColors.primaryDark,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 15,
+                          color: PastelColors.star,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          product.rating.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: PastelColors.textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      product.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: PastelColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Stok: ${product.stock} unit',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: PastelColors.textMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Text(
+                          product.formattedPrice,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            color: PastelColors.primary,
+                          ),
+                        ),
+                        if (product.discountPercentage > 0) ...[
+                          const SizedBox(width: 6),
+                          Text(
+                            product.formattedOriginalPrice,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              decoration: TextDecoration.lineThrough,
+                              color: PastelColors.textLight,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: PastelColors.secondary,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '-${product.discountPercentage.toStringAsFixed(0)}%',
+                              style: const TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                        const Spacer(),
+                        // Tombol Edit & Hapus di List View
+                        InkWell(
+                          onTap: () => _navigateToEditProduct(product),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: PastelColors.primaryLight,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.edit_rounded,
+                              size: 16,
+                              color: PastelColors.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        InkWell(
+                          onTap: () => _deleteProduct(product),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: PastelColors.secondaryLight,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.delete_rounded,
+                              size: 16,
+                              color: Colors.red.shade400,
                             ),
                           ),
                         ),
                       ],
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

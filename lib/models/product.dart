@@ -108,6 +108,79 @@ class Product {
     );
   }
 
+  /// Mengubah objek Product ke Map JSON untuk dikirim ke API (Create/Update)
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'category': category,
+      'price': price,
+      'discountPercentage': discountPercentage,
+      'rating': rating,
+      'stock': stock,
+      'tags': tags,
+      'brand': brand,
+      'sku': sku,
+      'weight': weight,
+      'warrantyInformation': warrantyInformation,
+      'shippingInformation': shippingInformation,
+      'availabilityStatus': availabilityStatus,
+      'returnPolicy': returnPolicy,
+      'minimumOrderQuantity': minimumOrderQuantity,
+      'images': images,
+      'thumbnail': thumbnail,
+    };
+  }
+
+  /// Membuat salinan Product dengan beberapa field yang diubah
+  Product copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? category,
+    double? price,
+    double? discountPercentage,
+    double? rating,
+    int? stock,
+    List<String>? tags,
+    String? brand,
+    String? sku,
+    double? weight,
+    Dimensions? dimensions,
+    String? warrantyInformation,
+    String? shippingInformation,
+    String? availabilityStatus,
+    List<Review>? reviews,
+    String? returnPolicy,
+    int? minimumOrderQuantity,
+    List<String>? images,
+    String? thumbnail,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      price: price ?? this.price,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
+      rating: rating ?? this.rating,
+      stock: stock ?? this.stock,
+      tags: tags ?? this.tags,
+      brand: brand ?? this.brand,
+      sku: sku ?? this.sku,
+      weight: weight ?? this.weight,
+      dimensions: dimensions ?? this.dimensions,
+      warrantyInformation: warrantyInformation ?? this.warrantyInformation,
+      shippingInformation: shippingInformation ?? this.shippingInformation,
+      availabilityStatus: availabilityStatus ?? this.availabilityStatus,
+      reviews: reviews ?? this.reviews,
+      returnPolicy: returnPolicy ?? this.returnPolicy,
+      minimumOrderQuantity: minimumOrderQuantity ?? this.minimumOrderQuantity,
+      images: images ?? this.images,
+      thumbnail: thumbnail ?? this.thumbnail,
+    );
+  }
+
   // Helpers
   double get originalPrice {
     if (discountPercentage <= 0 || discountPercentage >= 100) return price;
@@ -185,4 +258,3 @@ class Review {
     );
   }
 }
-

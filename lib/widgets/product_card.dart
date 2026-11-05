@@ -7,13 +7,96 @@ class ProductCard extends StatelessWidget {
   final Product product;
   final bool isFavorite;
   final VoidCallback? onFavoriteToggle;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onProductUpdated;
 
   const ProductCard({
     super.key,
     required this.product,
     this.isFavorite = false,
     this.onFavoriteToggle,
+    this.onEdit,
+    this.onDelete,
+    this.onProductUpdated,
   });
+
+  /// Menampilkan popup menu untuk Edit dan Hapus
+  void _showActionMenu(BuildContext context, Offset tapPosition) {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+        tapPosition & const Size(40, 40),
+        Offset.zero & overlay.size,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+      ),
+      color: PastelColors.surface,
+      elevation: 8,
+      items: [
+        PopupMenuItem<String>(
+          value: 'edit',
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: PastelColors.primaryLight,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.edit_rounded,
+                    size: 16, color: PastelColors.primary),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'Edit Produk',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: PastelColors.textDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'delete',
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: PastelColors.secondaryLight,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.delete_rounded,
+                    size: 16, color: Colors.red.shade400),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Hapus Produk',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red.shade400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'edit' && onEdit != null) {
+        onEdit!();
+      } else if (value == 'delete' && onDelete != null) {
+        onDelete!();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +105,10 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: product),
+            builder: (context) => ProductDetailScreen(
+              product: product,
+              onProductUpdated: onProductUpdated ?? onEdit,
+            ),
           ),
         );
       },
@@ -138,10 +224,67 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
 
-                  // Diskon Badge di Kanan Atas
-                  if (product.discountPercentage > 0)
+                  // Tombol Menu (Edit/Hapus) di Kanan Atas
+                  if (onEdit != null || onDelete != null)
+                    Positioned(
+                      top: 6,
+                      right: 6,
+                      child: GestureDetector(
+                        onTapDown: (details) {
+                          _showActionMenu(context, details.globalPosition);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: PastelColors.surface.withValues(alpha: 0.9),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.more_vert_rounded,
+                            size: 18,
+                            color: PastelColors.textDark,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // Diskon Badge jika tanpa menu
+                  if (product.discountPercentage > 0 &&
+                      (onEdit == null && onDelete == null))
                     Positioned(
                       top: 10,
+                      right: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: PastelColors.secondary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '-${product.discountPercentage.toStringAsFixed(0)}%',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // Diskon Badge (posisi bawah-kanan jika ada menu)
+                  if (product.discountPercentage > 0 &&
+                      (onEdit != null || onDelete != null))
+                    Positioned(
+                      bottom: 8,
                       right: 10,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
